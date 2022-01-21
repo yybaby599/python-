@@ -1,0 +1,12 @@
+# TO CONVERT THE MILLIONS IN THE Y-AXIS TO 1M, 2M, etc
+from matplotlib.ticker import FuncFormatter
+def millions(x, pos):
+    'The two args are the value and tick position'
+    return '%1.0fM' % (x * 1e-6)
+formatter_mil = FuncFormatter(millions)
+
+# TO CONVERT THE THOUSANDS IN THE Y-AXIS TO 1K, 2K, etc
+def thousands(x, pos):
+    'The two args are the value and tick position'
+    return '%1.0fk' % (x * 1e-3)
+formatter_kil = FuncFormatter(thousands)
