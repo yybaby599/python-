@@ -1,0 +1,34 @@
+sns.set(rc={'figure.figsize':(22,16)}, font_scale = 2)
+fig, axes = plt.subplots(2, 2)
+ax1 = sns.lineplot(x="DateRep", y="Cases_mean", hue="Continent", data=covid_daily_per_continent2, markers=True, legend=False, ax=axes[0, 0]) #, hue_order=countries_1_5
+texts1 = [axes[0, 0].text(last_day_covid.loc[last_day_covid['Continent'] == str(continent)]['DateRep'], last_day_covid.loc[last_day_covid['Continent'] == str(continent)]['Cases_mean'], str(continent), fontsize=18, color=ax1.get_lines()[continents.index(continent)].get_c(), ha = 'left', va = 'center') for continent in continents]
+# adjust_text(texts)
+axes[0, 0].set_ylabel("Daily cases (per continent)",fontsize=22)
+axes[0, 0].set_xlabel("",fontsize=22)
+ax1.yaxis.set_major_formatter(formatter_kil)
+ax1.xaxis.set_major_locator(locator)
+ax1.xaxis.set_major_formatter(fmt)
+
+ax2 = sns.lineplot(x="DateRep", y="Cases_mean", hue="Continent", data=covid_daily_per_continent_cumulative, markers=True, legend=False, ax=axes[1, 0]) #, hue_order=countries_1_5
+texts2 = [axes[1, 0].text(last_day_covid_cumulative.loc[last_day_covid_cumulative['Continent'] == str(continent)]['DateRep'], last_day_covid_cumulative.loc[last_day_covid_cumulative['Continent'] == str(continent)]['Cases_mean'], str(continent), fontsize=18, color=ax2.get_lines()[continents.index(continent)].get_c(), ha = 'left', va = 'center') for continent in continents]
+axes[1, 0].set_ylabel("Cumulative cases (per continent)",fontsize=22)
+axes[1, 0].set_xlabel("Date",fontsize=22)
+ax2.yaxis.set_major_formatter(formatter_mil)
+ax2.xaxis.set_major_locator(locator)
+ax2.xaxis.set_major_formatter(fmt)
+
+ax3 = sns.lineplot(x="DateRep", y="Cases", data=covid_daily_global, markers=True, legend=False, ax=axes[0, 1]) 
+axes[0, 1].set_ylabel("Daily cases (global)",fontsize=22)
+axes[0, 1].set_xlabel("",fontsize=22)
+ax3.yaxis.set_major_formatter(formatter_kil)
+ax3.xaxis.set_major_locator(locator)
+ax3.xaxis.set_major_formatter(fmt)
+
+ax4 = sns.lineplot(x="DateRep", y="Cases", data=covid_daily_global_cumulative, markers=True, legend=False, ax=axes[1, 1]) 
+axes[1, 1].set_ylabel("Cumulative cases (global)",fontsize=22)
+axes[1, 1].set_xlabel("Date",fontsize=22)
+ax4.yaxis.set_major_formatter(formatter_mil)
+ax4.xaxis.set_major_locator(locator)
+ax4.xaxis.set_major_formatter(fmt)
+
+plt.savefig('Fig_4_1_Liu_Xingye.png')
