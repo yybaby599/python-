@@ -1,0 +1,44 @@
+# tuning
+# Initiate some parameters that I want to track in the iteration below
+max_depth_range = range(1, 9)
+lrEval = BinaryClassificationEvaluator()
+accuracy_normalized = []
+auc_train           = []
+auc_test           = []
+accuracy_test            = []
+
+
+for i in max_depth_range:
+    # Define and fit
+    # estimator_max_depth.append(DecisionTreeRegressor(maxDepth = i))
+    estimator_max_depth=DecisionTreeClassifier(labelCol='response',maxDepth = i).fit(trainDF_monthly_transform)
+    # Score train and test set ############### we don't need to store this in every iteration so we can overwrite it ###############
+    # Make predictions.
+
+    predictions_test = estimator_max_depth.transform(testDF_monthly_transform)
+    evaluator = MulticlassClassificationEvaluator(labelCol="response", predictionCol="prediction", metricName="accuracy")
+    accuracy_test.append(evaluator.evaluate(predictions_test))
+    # auc
+    predictions_test = estimator_max_depth.transform(testDF_monthly_transform)
+    predictions_test=predictions_test.withColumnRenamed('response','label')
+    auc_test.append(lrEval.evaluate(predictions_test))
+    
+    predictions_train = estimator_max_depth.transform(trainDF_monthly_transform)
+    predictions_train=predictions_train.withColumnRenamed('response','label')
+    auc_train.append(lrEval.evaluate(predictions_train))
+    
+   
+    # 这行要删掉
+import pandas as pd
+performance_dictionary = {'ACCURACY': accuracy_test, 
+                          'AUC_TRAIN': auc_train,
+                          'AUC_TEST': auc_test,
+                         'MAX_DEPTH': MAX_DEPTH}
+performance_df = pd.DataFrame(performance_dictionary)
+performance_df
+
+
+# 这行之后要删掉
+performance_df=spark.createDataFrame(performance_df)
+
+display(performance_df)
